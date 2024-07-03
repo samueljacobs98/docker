@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    env_file:
+      - ./server/.env.dev
+    volumes:
+      - ./server:/app
+    environment:
+      - NODE_ENV=development
+      - SERVER_PORT=${SERVER_PORT}
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+    env_file:
+      - ./client/.env.dev
+    environment:
+      - NODE_ENV=development
+      - VITE_PORT=${VITE_PORT}
+      - VITE_SERVER_PORT=${VITE_SERVER_PORT}
+    depends_on:
+      - server
+
+volumes:
+  node_modules:

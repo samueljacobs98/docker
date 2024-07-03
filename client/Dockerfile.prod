@@ -1,0 +1,25 @@
+# Use an official Node.js image as the base
+FROM node:21-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the package.json and package-lock.json files
+COPY package.json package-lock.json* ./
+
+# Install dependencies
+RUN npm install
+
+# Install serve
+RUN npm install -g serve
+
+# Copy the rest of the client code
+COPY . .
+
+# Build the client
+RUN npm run build
+
+# EXPOSE "${VITE_PORT}"
+
+# Command to serve the build
+CMD ["sh", "-c", "serve -s dist -l ${VITE_PORT}"]

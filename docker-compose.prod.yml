@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.prod
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    env_file:
+      - .env.prod
+    environment:
+      - NODE_ENV=production
+      - SERVER_PORT=${SERVER_PORT}
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+    env_file:
+      - .env.prod
+    environment:
+      - NODE_ENV=production
+      - VITE_PORT=${VITE_PORT}
+      - VITE_SERVER_PORT=${VITE_SERVER_PORT}
+    depends_on:
+      - server

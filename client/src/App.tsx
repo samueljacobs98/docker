@@ -6,7 +6,7 @@ function App() {
 
   useEffect(() => {
     if (!fetchComplete.current) {
-      fetch("http://localhost:3000/")
+      fetch(`http://localhost:${import.meta.env.VITE_SERVER_PORT}`)
         .then((res) => res.json())
         .then((data) => setData(data.data))
         .then(() => (fetchComplete.current = true))

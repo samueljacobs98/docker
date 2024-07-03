@@ -1,0 +1,26 @@
+# Use an official Node.js image as the base
+FROM node:21-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the package.json and package-lock.json (if available) and install dependencies
+COPY package.json package-lock.json* ./
+RUN npm install
+
+# Copy the rest of the server code
+COPY . .
+
+# Compile TypeScript and log output
+RUN npm run build && echo "Build completed successfully" > /app/build.log || echo "Build failed" > /app/build.log
+
+# Log the contents of the /app directory and the /app/dist directory
+RUN ls -la . >> /app/build.log
+RUN ls -la /app >> /app/build.log
+RUN ls -la /app/dist >> /app/build.log || echo "dist directory not found" >> /app/build.log
+
+# Output the build.log content to the console
+RUN cat /app/build.log
+
+# Command to run the app
+CMD ["npm", "start"]

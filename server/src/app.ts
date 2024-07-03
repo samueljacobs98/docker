@@ -2,12 +2,21 @@ import express from "express";
 import cors from "cors";
 
 const app = express();
-const port = 3000;
 
 app.use(cors());
 
-app.get("/", (_, res) => {
-  res.send({ data: "Hello, World!" });
+const port = process.env.SERVER_PORT || 3000;
+
+app.get("/", async (_, res) => {
+  const timeout = setTimeout(() => {
+    res.send({ data: "Hello, World!" });
+  }, 3000);
+
+  return () => clearTimeout(timeout);
+});
+
+app.get("/ping", (_, res) => {
+  res.send("pong");
 });
 
 app.listen(port, () => {
